@@ -1,0 +1,305 @@
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
+local Window = Library.CreateLib("MAKE BY CEBULAPLP 🔧", "Midnight")
+
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+
+-- ===== MOVEMENT =====
+local Tab1 = Window:NewTab("Movement")
+local Section1 = Tab1:NewSection("Movement Hacks")
+
+-- NOCLIP
+Section1:NewButton("Noclip", "Enable noclip", function()
+    pcall(function()
+        loadstring(game:HttpGet("https://obj.wearedevs.net/197981/scripts/roblox%20noclip%20GUI.lua"))()
+    end)
+end)
+
+-- radgoll
+Section1:NewButton("radgoll", "radgoll", function()
+    pcall(function()
+loadstring(game:HttpGet('https://raw.githubusercontent.com/shakk-code/fe-ragdoll-script/refs/heads/main/script.lua', true))()
+    end)
+end)
+
+-- FLY
+Section1:NewButton("Fly", "Enable fly", function()
+    pcall(function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/XNEOFF/FlyGuiV3/main/FlyGuiV3.txt"))()
+    end)
+end)
+
+Section1:NewButton("tubers", "tubers", function()
+    pcall(function()
+        loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Tubers-93-anim-202003"))()
+    end)
+end)
+
+Section1:NewButton("aimbot", "aimbot", function()
+    pcall(function()
+        loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-GEMINI-AIMBOT-SCRIPT-190463"))()
+    end)
+end)
+
+Section1:NewButton("god mode", "god mode", function()
+    pcall(function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/mascaracathub/Test-Script/refs/heads/main/godmodev1.lua.txt"))()
+    end)
+end)
+
+-- SPEED
+Section1:NewSlider("Speed", "Change WalkSpeed", 200, 16, function(s)
+    pcall(function()
+        local char = LocalPlayer.Character
+        if char and char:FindFirstChild("Humanoid") then
+            char.Humanoid.WalkSpeed = s
+        end
+    end)
+end)
+
+-- ===== JUMP (UNIVERSAL FIX) =====
+getgenv().JumpValue = 50
+
+Section1:NewSlider("Jump", "Change Jump", 200, 50, function(j)
+    getgenv().JumpValue = j
+end)
+
+task.spawn(function()
+    while true do
+        task.wait(0.2)
+        pcall(function()
+            local char = LocalPlayer.Character
+            if char and char:FindFirstChild("Humanoid") then
+                local hum = char.Humanoid
+
+                if hum.UseJumpPower == true then
+                    hum.JumpPower = getgenv().JumpValue
+                else
+                    hum.JumpHeight = getgenv().JumpValue / 2
+                end
+            end
+        end)
+    end
+end)
+
+-- INFINITE JUMP
+Section1:NewButton("Infinite Jump", "Jump in air", function()
+    local UIS = game:GetService("UserInputService")
+    UIS.JumpRequest:Connect(function()
+        pcall(function()
+            local char = LocalPlayer.Character
+            if char and char:FindFirstChild("Humanoid") then
+                char.Humanoid:ChangeState("Jumping")
+            end
+        end)
+    end)
+end)
+
+-- ===== GAME SCRIPTS (UNIVERSAL TRY) =====
+local Tab2 = Window:NewTab("Game Scripts")
+local Section2 = Tab2:NewSection("Universal")
+
+Section2:NewButton("99 Nights Script (Try Universal)", "May not work in all games", function()
+    pcall(function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/adibhub1/99-nighit-in-forest/refs/heads/main/99%20night%20in%20forest", true))()
+    end)
+end)
+
+Section2:NewButton("animal hospital", "animal hospital", function()
+    pcall(function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/najzgaming/Animal-hospital/refs/heads/main/AHA.lua"))()
+    end)
+end)
+
+Section2:NewButton("fish", "May not work in all games", function()
+    pcall(function()
+        loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Fisch-Speed-x-Hub-88319"))()
+	end)
+end)
+
+Section2:NewButton("hypershot", "May not work in all games", function()
+    pcall(function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/TheRealAvrwm/Zephyr-V2/refs/heads/main/Hypershot.lua", true))()
+	end)
+end)
+
+Section2:NewButton("murder mystery 2", "murder mystery 2", function()
+    pcall(function()
+        loadstring(game:HttpGet("https://pastefy.app/Dv51svgN/raw"))()
+    end)
+end)
+
+Section2:NewButton("slime rng", "May not work in all games", function()
+    pcall(function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/thestackersudo/SRNG/refs/heads/main/main.lua"))()
+	end)
+end)
+
+Section2:NewButton("murder mystery 2", "murder mystery 2", function()
+    pcall(function()
+        local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+
+local LocalPlayer = Players.LocalPlayer
+
+local DEFAULT_COLOR = Color3.fromRGB(50, 205, 50)
+local KNIFE_COLOR   = Color3.fromRGB(220, 40, 40)
+local GUN_COLOR     = Color3.fromRGB(40, 120, 255)
+
+local FILL_ALPHA    = 1
+local OUTLINE_ALPHA = 0
+
+local HL_TAG = "_WH"
+local BB_TAG = "_WBB"
+
+local trackedData = {}
+
+local weaponKeywords = {
+	{ pattern = "gun",   priority = 2, color = GUN_COLOR   },
+	{ pattern = "knife", priority = 1, color = KNIFE_COLOR },
+}
+
+local function detectWeaponColor(character, player)
+	local best, bestPrio = nil, 0
+	local function checkTool(tool)
+		if not tool:IsA("Tool") then return end
+		local lower = tool.Name:lower()
+		for _, entry in ipairs(weaponKeywords) do
+			if lower:find(entry.pattern) and entry.priority > bestPrio then
+				bestPrio = entry.priority
+				best = entry.color
+			end
+		end
+	end
+	for _, obj in ipairs(character:GetChildren()) do checkTool(obj) end
+	local bp = player:FindFirstChildOfClass("Backpack")
+	if bp then for _, obj in ipairs(bp:GetChildren()) do checkTool(obj) end end
+	return best or DEFAULT_COLOR
+end
+
+local function getOrMakeHighlight(character)
+	local h = character:FindFirstChild(HL_TAG)
+	if h and h:IsA("Highlight") then return h end
+	if h then h:Destroy() end
+	local hl = Instance.new("Highlight")
+	hl.Name = HL_TAG
+	hl.Adornee = character
+	hl.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+	hl.FillTransparency = FILL_ALPHA
+	hl.OutlineTransparency = OUTLINE_ALPHA
+	hl.FillColor = DEFAULT_COLOR
+	hl.OutlineColor = DEFAULT_COLOR
+	hl.Parent = character
+	return hl
+end
+
+local function getOrMakeBillboard(character, playerName)
+	local head = character:FindFirstChild("Head")
+	if not head then return nil end
+
+	local bb = head:FindFirstChild(BB_TAG)
+	if bb and bb:IsA("BillboardGui") then
+		return bb:FindFirstChild("NameLabel")
+	end
+	if bb then bb:Destroy() end
+
+	local billboard = Instance.new("BillboardGui")
+	billboard.Name = BB_TAG
+	billboard.Adornee = head
+	billboard.AlwaysOnTop = true
+	billboard.Size = UDim2.new(0, 140, 0, 26)
+	billboard.StudsOffset = Vector3.new(0, 2.6, 0)
+	billboard.ResetOnSpawn = false
+	billboard.Parent = head
+
+	local label = Instance.new("TextLabel")
+	label.Name = "NameLabel"
+	label.Size = UDim2.new(1, 0, 1, 0)
+	label.BackgroundTransparency = 1
+	label.Text = playerName
+	label.Font = Enum.Font.GothamBold
+	label.TextSize = 13
+	label.TextColor3 = DEFAULT_COLOR
+	label.TextStrokeTransparency = 1
+	label.TextScaled = false
+	label.Parent = billboard
+
+	return label
+end
+
+local function updatePlayer(player)
+	if player == LocalPlayer then return end
+	local character = player.Character
+	if not character or not character:FindFirstChild("HumanoidRootPart") then return end
+
+	local color = detectWeaponColor(character, player)
+
+	local hl = getOrMakeHighlight(character)
+	hl.OutlineColor = color
+	hl.FillColor = color
+
+	local label = getOrMakeBillboard(character, player.DisplayName)
+	if label then
+		label.TextColor3 = color
+	end
+end
+
+local function hookCharacter(player, character)
+	character:WaitForChild("HumanoidRootPart", 10)
+
+	local conn = RunService.Heartbeat:Connect(function()
+		if not character.Parent then return end
+		updatePlayer(player)
+	end)
+
+	local prev = trackedData[player]
+	if prev then
+		if prev.conn then prev.conn:Disconnect() end
+		if prev.character then
+			local oldHl = prev.character:FindFirstChild(HL_TAG)
+			if oldHl then oldHl:Destroy() end
+			local oldHead = prev.character:FindFirstChild("Head")
+			if oldHead then
+				local oldBb = oldHead:FindFirstChild(BB_TAG)
+				if oldBb then oldBb:Destroy() end
+			end
+		end
+	end
+
+	trackedData[player] = { conn = conn, character = character }
+
+	character.AncestryChanged:Connect(function(_, parent)
+		if not parent and trackedData[player] and trackedData[player].character == character then
+			conn:Disconnect()
+		end
+	end)
+end
+
+local function hookPlayer(player)
+	if player == LocalPlayer then return end
+	if player.Character then task.spawn(hookCharacter, player, player.Character) end
+	player.CharacterAdded:Connect(function(character)
+		task.spawn(hookCharacter, player, character)
+	end)
+end
+
+for _, player in ipairs(Players:GetPlayers()) do task.spawn(hookPlayer, player) end
+Players.PlayerAdded:Connect(hookPlayer)
+
+Players.PlayerRemoving:Connect(function(player)
+	local data = trackedData[player]
+	if not data then return end
+	if data.conn then data.conn:Disconnect() end
+	if data.character then
+		local hl = data.character:FindFirstChild(HL_TAG)
+		if hl then hl:Destroy() end
+		local head = data.character:FindFirstChild("Head")
+		if head then
+			local bb = head:FindFirstChild(BB_TAG)
+			if bb then bb:Destroy() end
+		end
+	end
+	trackedData[player] = nil
+end)
+    end)
+end)
